@@ -1,3 +1,6 @@
+# 更新记录
+**2018.03.02**: 添加支持*ShuffleChannel*，使用代码：[ShuffleNet](https://github.com/farmingyard/ShuffleNet)
+
 # SSD: Single Shot MultiBox Detector
 
 [![Build Status](https://travis-ci.org/weiliu89/caffe.svg?branch=ssd)](https://travis-ci.org/weiliu89/caffe)
