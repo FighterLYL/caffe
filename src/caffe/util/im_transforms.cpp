@@ -713,7 +713,7 @@ cv::Mat ApplyDistort(const cv::Mat& in_img, const DistortionParameter& param) {
   } else {
     // Do random brightness distortion.
     RandomBrightness(out_img, &out_img, param.brightness_prob(),
-                     param.brightness_delta(), , param.brightness_scale_min(),
+                     param.brightness_delta(), param.brightness_scale_min(),
                      param.brightness_scale_max());
 
     // Do random saturation distortion.
