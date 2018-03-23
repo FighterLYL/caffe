@@ -549,23 +549,26 @@ cv::Mat ApplyNoise(const cv::Mat& in_img, const NoiseParameter& param) {
 }
 
 void RandomBrightness(const cv::Mat& in_img, cv::Mat* out_img,
-    const float brightness_prob, const float brightness_delta) {
+    const float brightness_prob, const float brightness_delta,
+    const float brightness_scale_min, const float brightness_scale_max) {
   float prob;
   caffe_rng_uniform(1, 0.f, 1.f, &prob);
   if (prob < brightness_prob) {
     CHECK_GE(brightness_delta, 0) << "brightness_delta must be non-negative.";
     float delta;
+    float scale;
     caffe_rng_uniform(1, -brightness_delta, brightness_delta, &delta);
-    AdjustBrightness(in_img, delta, out_img);
+    caffe_rng_uniform(1, brightness_scale_min, brightness_scale_max, &scale);
+    AdjustBrightness(in_img, delta, scale, out_img);
   } else {
     *out_img = in_img;
   }
 }
 
 void AdjustBrightness(const cv::Mat& in_img, const float delta,
-                      cv::Mat* out_img) {
-  if (fabs(delta) > 0) {
-    in_img.convertTo(*out_img, -1, 1, delta);
+                      const float scale, cv::Mat* out_img) {
+  if (fabs(delta) > 0 || scale > 0) {
+    in_img.convertTo(*out_img, -1, scale, delta);
   } else {
     *out_img = in_img;
   }
@@ -691,7 +694,8 @@ cv::Mat ApplyDistort(const cv::Mat& in_img, const DistortionParameter& param) {
   if (prob > 0.5) {
     // Do random brightness distortion.
     RandomBrightness(out_img, &out_img, param.brightness_prob(),
-                     param.brightness_delta());
+                     param.brightness_delta(), param.brightness_scale_min(),
+                     param.brightness_scale_max());
 
     // Do random contrast distortion.
     RandomContrast(out_img, &out_img, param.contrast_prob(),
@@ -709,7 +713,8 @@ cv::Mat ApplyDistort(const cv::Mat& in_img, const DistortionParameter& param) {
   } else {
     // Do random brightness distortion.
     RandomBrightness(out_img, &out_img, param.brightness_prob(),
-                     param.brightness_delta());
+                     param.brightness_delta(), , param.brightness_scale_min(),
+                     param.brightness_scale_max());
 
     // Do random saturation distortion.
     RandomSaturation(out_img, &out_img, param.saturation_prob(),

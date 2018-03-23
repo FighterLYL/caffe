@@ -676,6 +676,8 @@ message DistortionParameter {
   // Amount to add to the pixel values within [-delta, delta].
   // The possible value is within [0, 255]. Recommend 32.
   optional float brightness_delta = 2 [default = 0.0];
+  optional float brightness_scale_min = 12 [default = 1.0];
+  optional float brightness_scale_max = 13 [default = 1.0];
 
   // The probability of adjusting contrast.
   optional float contrast_prob = 3 [default = 0.0];
